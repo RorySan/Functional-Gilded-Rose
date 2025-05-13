@@ -1,68 +1,62 @@
-﻿open System.Collections.Generic
-
+﻿module FGR.Naive
 type Item =
     { Name: string
       SellIn: int
       Quality: int }
 
 
-type GildedRose(items:IList<Item>) =
-    let Items = items
-
-    member this.UpdateQuality() =
-        for i = 0 to Items.Count - 1 do
-            if Items.[i].Name <> "Aged Brie" && Items.[i].Name <> "Backstage passes to a TAFKAL80ETC concert" then
-                if Items.[i].Quality > 0 then
-                    if Items.[i].Name <> "Sulfuras, Hand of Ragnaros" then
-                        Items.[i] <- { Items.[i] with Quality = (Items.[i].Quality - 1) } 
+let updateQuality(items : array<Item>) =
+        for i = 0 to items.Length - 1 do
+            if items[i].Name <> "Aged Brie" && items[i].Name <> "Backstage passes to a TAFKAL80ETC concert" then
+                if items[i].Quality > 0 then
+                    if items[i].Name <> "Sulfuras, Hand of Ragnaros" then
+                        items[i] <- { items[i] with Quality = (items[i].Quality - 1) }
             else
-               if Items.[i].Quality < 50 then
-                    Items.[i] <- { Items.[i] with Quality = (Items.[i].Quality + 1) } 
-                    if Items.[i].Name = "Backstage passes to a TAFKAL80ETC concert" then
-                        if Items.[i].SellIn < 11 then
-                            if Items.[i].Quality < 50 then
-                                Items.[i] <- { Items.[i] with Quality = (Items.[i].Quality + 1) } 
-                        if Items.[i].SellIn < 6 then
-                            if Items.[i].Quality < 50 then
-                                Items.[i] <- { Items.[i] with Quality = (Items.[i].Quality + 1) } 
-            if Items.[i].Name <> "Sulfuras, Hand of Ragnaros" then                 
-                Items.[i] <- { Items.[i] with SellIn  = (Items.[i].SellIn - 1) } 
-            if Items.[i].SellIn < 0 then
-                if Items.[i].Name <> "Aged Brie" then
-                    if Items.[i].Name <> "Backstage passes to a TAFKAL80ETC concert" then
-                        if Items.[i].Quality > 0 then
-                            if Items.[i].Name <> "Sulfuras, Hand of Ragnaros" then
-                                Items.[i] <- { Items.[i] with Quality   = (Items.[i].Quality  - 1) } 
+               if items[i].Quality < 50 then
+                    items[i] <- { items[i] with Quality = (items[i].Quality + 1) }
+                    if items[i].Name = "Backstage passes to a TAFKAL80ETC concert" then
+                        if items[i].SellIn < 11 then
+                            if items[i].Quality < 50 then
+                                items[i] <- { items[i] with Quality = (items[i].Quality + 1) }
+                        if items[i].SellIn < 6 then
+                            if items[i].Quality < 50 then
+                                items[i] <- { items[i] with Quality = (items[i].Quality + 1) }
+            if items[i].Name <> "Sulfuras, Hand of Ragnaros" then
+                items[i] <- { items[i] with SellIn  = (items[i].SellIn - 1) }
+            if items[i].SellIn < 0 then
+                if items[i].Name <> "Aged Brie" then
+                    if items[i].Name <> "Backstage passes to a TAFKAL80ETC concert" then
+                        if items[i].Quality > 0 then
+                            if items[i].Name <> "Sulfuras, Hand of Ragnaros" then
+                                items[i] <- { items[i] with Quality   = (items[i].Quality  - 1) }
                     else
-                        Items.[i] <- { Items.[i] with Quality   = (Items.[i].Quality  - Items.[i].Quality) } 
+                        items[i] <- { items[i] with Quality   = (items[i].Quality  - items[i].Quality) }
                 else
-                    if Items.[i].Quality < 50 then
-                        Items.[i] <- { Items.[i] with Quality   = (Items.[i].Quality + 1) }  
-        ()
+                    if items[i].Quality < 50 then
+                        items[i] <- { items[i] with Quality   = (items[i].Quality + 1) }
+        items
 
 
 module Program =
     [<EntryPoint>]
-    let main argv =
+    let main _ =
         printfn "OMGHAI!"
-        let Items = new List<Item>()
-        Items.Add({Name = "+5 Dexterity Vest"; SellIn = 10; Quality = 20})
-        Items.Add({Name = "Aged Brie"; SellIn = 2; Quality = 0})
-        Items.Add({Name = "Elixir of the Mongoose"; SellIn = 5; Quality = 7})
-        Items.Add({Name = "Sulfuras, Hand of Ragnaros"; SellIn = 0; Quality = 80})
-        Items.Add({Name = "Sulfuras, Hand of Ragnaros"; SellIn = -1; Quality = 80})
-        Items.Add({Name = "Backstage passes to a TAFKAL80ETC concert"; SellIn = 15; Quality = 20})
-        Items.Add({Name = "Backstage passes to a TAFKAL80ETC concert"; SellIn = 10; Quality = 49})
-        Items.Add({Name = "Backstage passes to a TAFKAL80ETC concert"; SellIn = 5; Quality = 49})
-        Items.Add({Name = "Conjured Mana Cake"; SellIn = 3; Quality = 6})
+        let mutable Items =
+            [|{Name = "+5 Dexterity Vest"; SellIn = 10; Quality = 20};
+            {Name = "Aged Brie"; SellIn = 2; Quality = 0};
+            {Name = "Elixir of the Mongoose"; SellIn = 5; Quality = 7};
+            {Name = "Sulfuras, Hand of Ragnaros"; SellIn = 0; Quality = 80};
+            {Name = "Sulfuras, Hand of Ragnaros"; SellIn = -1; Quality = 80};
+            {Name = "Backstage passes to a TAFKAL80ETC concert"; SellIn = 15; Quality = 20};
+            {Name = "Backstage passes to a TAFKAL80ETC concert"; SellIn = 10; Quality = 49};
+            {Name = "Backstage passes to a TAFKAL80ETC concert"; SellIn = 5; Quality = 49};
+            {Name = "Conjured Mana Cake"; SellIn = 3; Quality = 6}|]
 
-        let app = new GildedRose(Items)
-        
         for i = 0 to 30 do
             printfn "-------- day %d --------" i
             printfn "name, sellIn, quality"
-            for j = 0 to Items.Count - 1 do
-                 printfn "%s, %d, %d" Items.[j].Name Items.[j].SellIn Items.[j].Quality
+            for j = 0 to Items.Length - 1 do
+                 printfn "%s, %d, %d" Items[j].Name Items[j].SellIn Items[j].Quality
             printfn ""
-            app.UpdateQuality()
+            Items <- Items |> updateQuality
         0
