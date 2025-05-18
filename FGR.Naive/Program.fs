@@ -13,12 +13,10 @@ let expiresIn days item =
 let increaseQuality amount item =
     let newQuality = item.Quality + amount    
     { item with Quality = min maxQuality newQuality } 
-
 let decreaseQuality amount item =
     let newQuality = item.Quality - amount
-    { item with Quality = max minQuality newQuality }
-        
-let decreaseSellin item =
+    { item with Quality = max minQuality newQuality }        
+let decreaseSellIn item =
     { item with SellIn = item.SellIn - 1 }
         
 let updateQuality(items : array<Item>) =
@@ -30,7 +28,7 @@ let updateQuality(items : array<Item>) =
                     if isExpired item then 2 else 1
                 item
                 |> increaseQuality qualityIncrease
-                |> decreaseSellin         
+                |> decreaseSellIn         
             | "Sulfuras, Hand of Ragnaros" -> item
             | "Backstage passes to a TAFKAL80ETC concert" ->
                 if isExpired item then
@@ -41,13 +39,13 @@ let updateQuality(items : array<Item>) =
                     item |> increaseQuality 2
                 else 
                     item |> increaseQuality 1
-                |> decreaseSellin
+                |> decreaseSellIn
             | _ ->
                 if isExpired item then
                    item |> decreaseQuality 2
                 else
                     item |> decreaseQuality 1
-                |> decreaseSellin)
+                |> decreaseSellIn)
 
 module Program =
     [<EntryPoint>]
