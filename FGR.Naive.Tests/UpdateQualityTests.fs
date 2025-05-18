@@ -22,9 +22,13 @@ let verifyQuality expectedQuality (item: array<Item>) =
 let verifySellIn expectedSellIn (item: array<Item>) =
     test <@ item[0].SellIn = expectedSellIn @>
 
+let verifyDecrement (item: Item) =
+    [| { item with SellIn = 10 } |] |> updateQuality |> verifySellIn 9
+    
 [<Fact>]
-let ``Regular item SellIn date decreases by 1`` () =
-    [| { regularItem with SellIn = 10 } |] |> updateQuality |> verifySellIn 9
+let ``Non legendary items SellIn decreases by 1`` () =
+    [regularItem; agedBrie; tickets]
+        |> Seq.iter verifyDecrement
 
 [<Fact>]
 let ``Regular item Quality decreases by 1`` () =
